@@ -1,0 +1,7 @@
+INDEX VERSION 1.4+C:\myJSP\bookshop_workspace\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+4277861499.index
+940020968.index
+1045543823.index
+3258820750.index
+1561259185.index
+265177764.index
