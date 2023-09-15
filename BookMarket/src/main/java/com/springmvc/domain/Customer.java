@@ -7,15 +7,20 @@ public class Customer implements Serializable{
 	private String name;               //고객명
 	private Address address;          //고객 주소 객체
 	private String phone;             //고객 전화번호
+	//↑ Customer 클래스의 customerId, name, address, phone 필드 등을 선언
 	
 	public Customer() {
 		this.address= new Address();
 	}
+	//↑ 기본 생성자 Customer() 추가
+	
 	public Customer(String customerId, String name) {
 		 this();
 		this.customerId = customerId;
 		this.name = name;
 	}
+	//↑ 일반 생성자 Customer() 추가
+	
 	public String getCustomerId() {
 		return customerId;
 	}
@@ -40,6 +45,8 @@ public class Customer implements Serializable{
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+	//↑ 각 필드에 대한 Setter()와 Getter() 메서드 추가
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -63,7 +70,7 @@ public class Customer implements Serializable{
 			return false;
 		return true;
 	}
-	
+	//↑  hashCode(), equals() 메서드를 추가함. 
 	
 	
 	

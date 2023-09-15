@@ -7,6 +7,8 @@ public class Address implements Serializable{
 	private String addressName;   //주소 
 	private String country;        //국가명
 	private String zipCode;        //우편번호
+	//↑ 위에서 부터 전부
+	//↑ Address 클래스의 detailName, addressName, country, zipCode 필드 등을 선언합니다. 
 	
 	public String getDetailName() {
 		return detailName;
@@ -32,6 +34,9 @@ public class Address implements Serializable{
 	public void setZipCode(String zipCode) {
 		this.zipCode = zipCode;
 	}
+	//↑ getDetailName() 부터 setZipCode 까지
+	//↑ 각 필드에 대한 Setter()와 Getter()  메서드를 추가함
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -73,6 +78,7 @@ public class Address implements Serializable{
 			return false;
 		return true;
 	}
+	//↑ hashcode(), equals() 메서드추가. 
 	
 	
 }

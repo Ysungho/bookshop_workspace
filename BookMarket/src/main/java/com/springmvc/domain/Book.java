@@ -1,3 +1,4 @@
+// 도서 기본 정보가 담긴 도메인 객체
 package com.springmvc.domain;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -13,13 +14,31 @@ import java.io.Serializable;
 public class Book implements Serializable{
     private static final long serialVersionUID = -7715651009026349175L; 
 	@BookId
+	//↑ 도메인 클래스 Book의 bookId 필드는 저장소 객체의 존재 여부에 대한 유효성 검사를 위해 사용자 정의 애너테이션 @BookId를 선언함. 
     @Pattern(regexp="ISBN[1-9]+", message="{Pattern.NewBook.bookId}")  
+	//↑ @Pattern은 멤버 변수 bookId의 제약사항입. 
+	//↑ 첫 문자가 ISBN으로 시작하여 1~9까지 연속된 숫자가 오는 정규식 패턴을 갖음
+	//↑ 유효성 검사를 할 때 bookId 값이 정규 표현식 ISBN[1~9]패턴과 일치하지 ㅇ낳으면 메시지 리소스 파일에 선언된 Pattern.Newbook.Bookid를 출력
+	//↑ 메시지 리소스 파일에 해당 메시지가 선언되어 있지 않으면 기본 메시지로 '정규식~~패턴과 일치해야 합니다'를 출력함. 
     private String bookId;
     @Size(min=4, max=50, message="{Size.NewBook.name}")  
+    //↑ @Size는 멤버 변수 name의 제약사항임
+    //↑ 최소 4자 이상, 최대 50자 이하의 문자열 크기를 가져야함. 
+    //↑ 유효성 검사를 할 때 name 값이 기존 문자열 크기에 해당되지 않으면 메시지 리소스 파일에 선언된 Size.Name.name의 메시지를 출력함
+    //↑ 메시지 리소스 파일에 해당 메시지가 언언되어 있지 않으면 기본메시지를 출력함. 
     private String name;
-    @Min(value=0, message="{Min.NewBook.unitPrice}")  
-    @Digits(integer=8, fraction=2, message="{Digits.NewBook.unitPrice}")  
-    @NotNull(message= "{NotNull.NewBook.unitPrice}")     
+    @Min(value=0, message="{Min.NewBook.unitPrice}") 
+    //↑ 멤버 변수 unitPrice의 제약 사항으로 3가지 JSR-380을 가짐. 
+    @Digits(integer=8, fraction=2, message="{Digits.NewBook.unitPrice}") 
+    //↑ 멤버 변수 unitPrice의 제약 사항으로 3가지 JSR-380을 가짐. 
+    //↑ @Digits는 멤버 변수 unitPrice에 정수 8자리와 소수점 2자리를 가짐. 
+    //↑ 유효성 검사를 할 때 자릿수와 일치하지 않으면 메시지 리소스 파일에 선언된 Digits.newBook.unitPrice의 메시지를 출력함
+    //↑ 메시지 리소스 파일에 해당 메시지가 선언되어 있지 않으면 '혀용 범위를 벗어났다'는 메시지가 출력됨. 
+    @NotNull(message= "{NotNull.NewBook.unitPrice}") 
+    //↑ 멤버 변수 unitPrice의 제약 사항으로 3가지 JSR-380을 가짐. 
+    //↑ @NotNull은 멤버 변수 unitPrice가 Null이 아닌 값을 가짐. 
+    //↑ 유효성 검사를 할 때 Null값이면 메시지 리소스 파일에 선언된 NotNull.NewBook.unitPrice의 메시지를 출력함
+    //↑ 메시지 리소스 파일에 해당 메시지가 언언되어 잇지 않으면 기본메시지를 출력함
     private int unitPrice;      // 가격
     private String author;     // 저자
     private String description; // 설명
@@ -30,13 +49,14 @@ public class Book implements Serializable{
     private String condition;   // 신규 도서 or 중고 도서 or 전자책
     private MultipartFile bookImage;  // 도서 이미지
     private String  fileName; 
+    //↑ 이미지 파일 이름을 저장, 관리하기 위해서 문자열 타입의 fileName 필드 추가
     
-	public Book() {
+	public Book() {//기본 생성자
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Book(String bookId, String name, int unitPrice) {
+	public Book(String bookId, String name, int unitPrice) {//일반 생성자
 		super();
 		this.bookId = bookId;
 		this.name = name;
@@ -45,10 +65,12 @@ public class Book implements Serializable{
 	
 	
 	public MultipartFile getBookImage() {
+		//↑ MultipartFile 타입인 bookImage의 Getter() 메서드 입니다. 
 		return bookImage;
 	}
 
 	public void setBookImage(MultipartFile bookImage) {
+		//↑ MultipartFile 타입인 bookImage의 Setter() 메서드 입니다. 
 		this.bookImage = bookImage;
 	}
 
@@ -56,11 +78,12 @@ public class Book implements Serializable{
 	public String getFileName() {  
 	        return fileName;
 	}
-	
+	//↑ Getter() 메서드 추가
 	public void setFileName(String fileName) {
 	        this.fileName = fileName;
 	}  
-	    
+	//↑ Setter() 메서드 추가    
+	
 	public String getBookId() {
         return bookId;
     }

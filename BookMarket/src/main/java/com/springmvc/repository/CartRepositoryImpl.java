@@ -22,10 +22,13 @@ public class CartRepositoryImpl implements CartRepository{
         listOfCarts.put(cart.getCartId(), cart);
         return cart;
     }  
+    //↑ crate() 메서드는 새로운 장바구니를 생성하여 장바구니 ID를 등록하고 생성된 장바구니 객체를 반환합니다
+    //↑ 동일한 장바구니 ID가 존재하면 예외처리를 위해 IllegalArgumentException() 메서드를 호출합니다. 
 
     public Cart read(String cartId) { 
         return listOfCarts.get(cartId);
     } 
+    //↑ read() 메서드는 장바구니 ID를 이용하여 장바구니에 등록된 모든 정보를 가져와 반환합니다.
     
     public void update(String cartId, Cart cart) {
         if(!listOfCarts.keySet().contains(cartId)) {

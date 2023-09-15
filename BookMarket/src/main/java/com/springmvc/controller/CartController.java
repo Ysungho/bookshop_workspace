@@ -39,11 +39,15 @@ public class CartController {
         String sessionid = request.getSession(true).getId();
         return "redirect:/cart/"+ sessionid;
     }  
+    //↑ requestCartId() 메서드는 웹 요청 url이 알맞게 들어오면 요청 처리 메서드로 사용자 요청을 처리합니다. 
+    //↑ 세션 id값을 가져와 url cart/sessionid로 리다이렉션합니다. 
 
     @PostMapping  
     public @ResponseBody Cart create(@RequestBody Cart cart ) {
         return cartService.create(cart);
     }  
+    //↑ create() 메서드는 http 메서드가 post 방식이면 매핑되는 요청 처리 메서드로, 사용자 요청을 처리합니다. 
+    //↑ cart 클래스 정보를 http 요청 body로 전달받아 장바구니를 새로 생성하고 http 응답 body로 전달합니다. 
 
     @GetMapping( "/{cartId}") 
     public String requestCartList(@PathVariable(value = "cartId") String cartId, Model model) {
@@ -51,11 +55,16 @@ public class CartController {
         model.addAttribute("cart",cart);
         return "cart";
     } 
+    //↑ requestCartList()메서드는 http 메서드가 get 방식이면 매핑되는 요청처리 메서드로, 사용자 요청을 처리합니다. 
+    //↑ 요청 url에서 경로 변수 cartid에 대해 장바구니에 등록된 모든 정보를 읽어와 커맨드 객체 cart 속성에 등록합니다. 
+    //↑ 뷰 이름을 cart로 반환하므로 jsp 파일은 cart.jsp가 됩니다. 
 
     @PutMapping("/{cartId}") 
     public @ResponseBody Cart read(@PathVariable(value = "cartId") String cartId) {
         return cartService.read(cartId);
     } 
+    //↑ read() 메서드는 http 메서드가 put 방식이면 매핑되는 요청 처리 메서드로 사용자 요청을 처리합니다. 
+    //↑ read() 메서드는 요청 url에서 경로 변수인 장바구니 ID(cartId)에 대해 장바구니에 등록된 모든 정보를 가져옵니다. 
     
     @PutMapping("/add/{bookId}")  
     @ResponseStatus(value = HttpStatus.NO_CONTENT)  
@@ -70,6 +79,8 @@ public class CartController {
         cart.addCartItem(new CartItem(book));  
         cartService.update(sessionId, cart);  
     } 
+    //↑ addCartByNewItem() 메서드는 http 메서드가 put 방식입니다. 
+    //↑ url경로가 /cart/add/{bookid}/ 이면 경로 변수에 bookid에 대해 해당 도서를 장바구니에 추가로 등록하고 장바구니를 갱신합니다. 
     
     @PutMapping("/remove/{bookId}")  
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
@@ -84,10 +95,13 @@ public class CartController {
         cart.removeCartItem(new CartItem(book));  
         cartService.update(sessionId, cart);  
     }  
+    //↑ removeByItem() 메서드는 http 메서드가 put 방식입니다.
+    //↑ 요청 url이 /cart/remove/{bookid}/일 때 경로 변수 bookid에 대해 해당 도서를 장바구니에서 삭제하고 장바구니를 갱신합니다. 
     
     @DeleteMapping("/{cartId}")  
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteCartList(@PathVariable(value = "cartId") String cartId) {
         cartService.delete(cartId);
     }  
+    //↑ deleteCartList() 메서드는 http 메서드가 delete 방식일 때 요청 처리 메서드로 사용자 요청을 처리합니다. 
 }

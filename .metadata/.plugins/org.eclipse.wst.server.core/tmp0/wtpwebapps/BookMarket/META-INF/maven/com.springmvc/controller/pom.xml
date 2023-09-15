@@ -1,24 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.springmvc</groupId>
-	<artifactId>controller</artifactId>
-	<name>BookMarket</name>
-	<packaging>war</packaging>
-	<version>1.0.0-BUILD-SNAPSHOT</version>
-	<properties>
-		<java-version>11</java-version>
-		<org.springframework-version>5.3.19</org.springframework-version>
-		<org.aspectj-version>1.9.9.1</org.aspectj-version>
-		<org.slf4j-version>1.7.36</org.slf4j-version>
+	<modelVersion>4.0.0</modelVersion><!-- POM 모델 버전 -->
+	<groupId>com.springmvc</groupId><!-- 그룹 ID: 스프링 MVC 프로젝트를 생성 할 때 입력한 그룹의 도메인 이름 -->
+	<artifactId>controller</artifactId><!-- 아티팩트 id: 프로젝트에 할당한 고유 ID -->
+	<name>BookMarket</name><!-- 프로젝트 이름: 프로젝트를 식별하는 고유 ID -->
+	<packaging>war</packaging><!-- 패키지 유형: 프로젝트를 어떤 형태로 패키지할지 설정함.  -->
+	<version>1.0.0-BUILD-SNAPSHOT</version><!-- 프로그램 버전: 기본으로 1.0.0으로 설정됨.  -->
+	<!-- 참고로 메이븐의 버전 명명 규칙은 완성되지 않은 버전은 SNAPSHOT, 완성된 공식 배포 버전은 RELEASE로 구분함.  -->
+	
+	<properties><!-- pom.xml 파일 내부에서 사용할 속성을 정의할 때 properties 요소에서 설정함. 주로 공통으로 많이 사용되는 내용을 설정 -->
+		<java-version>11</java-version><!-- 자바 버전 -->
+		<org.springframework-version>5.3.19</org.springframework-version><!-- 스프링 프레임워크 버전 -->
+		<org.aspectj-version>1.9.9.1</org.aspectj-version><!-- aspectj 버전: 스프링 AOP의 핵심 모듈 중 하나인 애스팩터 버전 -->
+		<org.slf4j-version>1.7.36</org.slf4j-version><!-- slf4j 버전: 여러 로거를 선택해서 사용할 수 있게 하는 로깅 버전 -->
 		<security-version>5.6.3</security-version>
 		<commons-fileupload-version>1.4</commons-fileupload-version>
         <commons-io-version>2.11.0</commons-io-version>
         <org.apache.tiles-version>3.0.8</org.apache.tiles-version>
 	</properties>
-	<dependencies>
 	
+	<dependencies>
+	<!-- 의존성 형태 
+	groupId: 그룹의 도메인 이름을 설정 
+	artifactId: 프로젝트에 할당한 고유 ID를 설정
+	version: 스프링 AOP의 핵심 모듈 중 하나인 애스팩터 버전을 나타냄
+	scope(범위): 해당 라이브러리를 어떤 상황에 사용하는지 설정함. 이 코드는 특별히 지정하지 않아도 상관 없음 -->
 	
 		<!-- Validation -->
         <dependency>
@@ -32,7 +39,7 @@
             <version>5.4.2.Final</version>
         </dependency>
 	
-		<!-- Spring -->
+		<!-- Spring: 스프링 라이브러리인 spring-context, spring-webmvc를 사용할 수 있는 설정 -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
@@ -82,14 +89,14 @@
     
     	
 			
-		<!-- AspectJ -->
+		<!-- AspectJ: AOP를 사용하는 AspectJ 라이브러리 설정 -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
 			<version>${org.aspectj-version}</version>
 		</dependency>	
 		
-		<!-- Logging -->
+		<!-- Logging: 로그를 기록하는 slf4j 관련 라이브러리 설정 -->
 		<dependency>
         	<groupId>org.slf4j</groupId>
         	<artifactId>slf4j-api</artifactId>
@@ -137,14 +144,14 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- @Inject -->
+		<!-- @Inject: @Inject를 사용하는 inject 라이브러리 설정 -->
 		<dependency>
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
 		</dependency>
 				
-		<!-- Servlet -->
+		<!-- Servlet: 자바에서 지원하는 servlet-api, jsp-api, jstl 라이브러리를 사용할 수 있는 설정 -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
@@ -163,7 +170,7 @@
 			<version>1.2</version>
 		</dependency>
 	
-		<!-- Test -->
+		<!-- Test: 자바용 단위 테스트 도구를 사용하는 junit 라이브러리 설정 -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -216,9 +223,12 @@
     	</dependency>
     
 	</dependencies>
+	
+	<!-- build: 프로젝트를 빌드할 때 필요한 요소를 불러오고 싶다면 build 요소 안에 설정함. -->
+	<!-- plugins 요소를 이용해서 빌드에서 사용할 플러그인을 설정.  -->
     <build>
         <plugins>
-            <plugin>
+            <plugin><!-- 이클립스 프로젝트를 생성하려고 플러그인 설정 -->
                 <artifactId>maven-eclipse-plugin</artifactId>
                 <version>2.9</version>
                 <configuration>
@@ -232,7 +242,7 @@
                     <downloadJavadocs>true</downloadJavadocs>
                 </configuration>
             </plugin>
-            <plugin>
+            <plugin><!-- 소스 코드를 컴파일 하려고 플러그인 설정 -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.5.1</version>
@@ -244,7 +254,7 @@
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
-            <plugin>
+            <plugin><!-- 자바 프로그램을 실행하려고 자바 플러그인을 설정 -->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.2.1</version>

@@ -1,3 +1,4 @@
+//도서 정보를 관리하는 퍼시스턴스 계층
 package com.springmvc.repository;
 
 import java.util.List;
@@ -19,11 +20,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class BookRepositoryImpl implements BookRepository{
 	
 	 private JdbcTemplate template; 
-	 
+	 //↑ jdbcTemplate 클래스를 사용하기 위해 jdbcTemplate 객체 타입의 jdbcTemplate을 선언
 	 @Autowired  
 	 public void setJdbctemplate(DataSource dataSource) {
 	    this.template = new JdbcTemplate(dataSource);
 	 }
+	 //↑ setJdbctemplate() 메서드는 데이터베이스 연동을 위해 스프링 MVC 설정 파일에 DataSource를 jdbcTempalate 클래스에 전달. 
 	 
 	 private List<Book> listOfBooks = new ArrayList<Book>();
 	    
@@ -56,30 +58,44 @@ public class BookRepositoryImpl implements BookRepository{
 	        listOfBooks.add(book1);
 	        listOfBooks.add(book2);
 	        listOfBooks.add(book3);
-	    
+	        // 기본 생성자: 도메인 객체에서 정의된 모든 필드 값을 설정합니다. 
 	   } 
 	        
 	    @Override
-	    public List<Book> getAllBookList() { 
+	    public List<Book> getAllBookList() { // 도서 목록 가져오기: 저장된 도서 목록의 정보를 가져오는 getAllBookList() 메서드를 작성함. 
 	    	String SQL = "SELECT * FROM book";  
+	    	//↑ SQL 문을 SELECT*FROM book으로 간단히 설정
 	        List<Book> listOfBooks = template.query(SQL, new BookRowMapper());  
+	        //↑ 도서 목록에 대한 조회이므로 query() 메서드를 사용함. 
+	        //↑ query() 메서드를 대신해서 queryForList() 메서드를 사용할 수 있음
+	        //↑ 단 qqueryForList() 메서드는 RowMapper를 제공하지 않으므로 조금의 수정을 거쳐야함. 
 	        return listOfBooks;
+	        
 	    } 
 	    
-	    public List<Book> getBookListByCategory(String category) { 
+	    public List<Book> getBookListByCategory(String category) {//도서 분야와 일치하는 도서 목록을 가져오는 getBookListByCategory()메서드 
+	    	//↑ getBookListByCategory() 메서드는 데이터베이스의 book 테이블에 등록된 모든 도서 목록 중에서 검색 조건인 category와 일치하는 전체 도서 목록을 조회하여 도서 목록을 반환함. 
 	        List<Book> booksByCategory = new ArrayList<Book>(); 
+	        //↑ 일치하는 도서 분야를 저장하는 객체 변수 booksByCategory를 선언
 	       /* for(int i =0 ; i<listOfBooks.size() ; i++) {
 	            Book book = listOfBooks.get(i);  
+	            // book에 도서 목록의 i 번재 도서 정보를 저장
 	            if(category.equalsIgnoreCase(book.getCategory()))   
 	                booksByCategory.add(book);  
+	                //↑ 대, 소 문자와 관계없이 매개 변수 category와 도서 분야가 일치하는 도소 목록 i번째의 도서 정보를 bookByCategory에 저장
 	        }
 	        */
+	        
 	        String SQL = "SELECT * FROM book where b_category LIKE '%" + category + "%'";  
+	        //↑ SQL 문을 SELECT*FROM book WHERE b_category LIKE '%" + catogory + "%'로 간단하게 설정함. 
 	        booksByCategory = template.query(SQL, new BookRowMapper());  
+	        //↑ 검색 조건인 도서 분류에 대한 도서 목록을 조회하므로 query() 메서드는 RowMapper로 변경함. 
 	        return booksByCategory;  
+	        //↑ 배개 변수 category와 일치하는 도서 목록을 반환
 	    } 
 	    
 	    public Set<Book> getBookListByFilter(Map<String, List<String>> filter) {
+	    	//↑ getBookByFilter() 메서드는 데이터베이스의 book 테이블에 등록된 모든 도서 목록 중에서 검색 조건인 publisher, category와 일치하는 도서 목록을 조회하여 도서 목록을 반환함. 
 	        Set<Book> booksByPublisher = new HashSet<Book>();
 	        Set<Book> booksByCategory = new HashSet<Book>();
 
@@ -95,10 +111,15 @@ public class BookRepositoryImpl implements BookRepository{
 	                        booksByPublisher.add(book);
 	                }
 	                */
-	            	 String SQL = "SELECT * FROM book where b_publisher LIKE '%" + publisherName + "%'";  
+	            	 String SQL = "SELECT * FROM book where b_publisher LIKE '%" + publisherName + "%'"; 
+	            	 //↑ SQL 문을 SELECT*FROM book WHERE b_publisher LIKE '%" + publisherName + "%'로 간단하게 설정함.
 	                 booksByPublisher.addAll(template.query(SQL, new BookRowMapper())); 
+	                 //↑ 검색 조건인 출판사에 대한 도서 목록을 조회하므로 query() 메서드를 사용함.
+	                 //↑ 또한 queryForList() 메서드를 사용할 수 도 있음
 	            }
 	        }  
+	        //↑ 매트릭스 변수 중 publisher를 포함하는 경우에 실행됨
+	        //↑ 전체 도서 목록 중에서 publisher 필드 값과 일치하는 도서를 검색하여 booksByPublisher 객체에 등록함
 
 	        if (booksByFilter.contains("category")) {  
 	            for (int i = 0; i < filter.get("category").size(); i++) { 
@@ -106,16 +127,26 @@ public class BookRepositoryImpl implements BookRepository{
 	                /*  List<Book> list = getBookListByCategory(category); 
 	                booksByCategory.addAll(list); 
 	                */
-	            	String SQL = "SELECT * FROM book where b_category LIKE '%" + category + "%'";  
+	            	String SQL = "SELECT * FROM book where b_category LIKE '%" + category + "%'"; 
+	            	//↑ SQL 문을 SELECT*FROM book WHERE b_category LIKE '%" + catogory + "%'로 간단하게 설정함. 
 	                booksByCategory.addAll(template.query(SQL, new BookRowMapper())); 
+	                //↑ 검색 조건인 도서 분류에 대한 도서 목록을 조회하므로 query() 메서드를 사용함. 
+	                //↑ queryForList() 메서드를 사용할 수 도 있음. 
 	            }
 	        }  
+	        //↑ 매트릭수 변수 중 category를 포함하는 경우에 실행. 
+	        //↑ 전체 도서 목록 중 category 값과 일치하는 도서를 검색하여 booksByCategory 객체에 등록
 
-	        booksByCategory.retainAll(booksByPublisher);  
+	        booksByCategory.retainAll(booksByPublisher); 
+	        //↑ booksByCategory 객체에 등록된 도서와 booksByPublisher에 등록된 도서 목록 중 중복되는 도서만 남기고 나머지는 삭제
+	        //↑ 이 후 booksByCategory 객체로 반환. 
 	        return booksByCategory;
 	    }
 	    
 	    public Book getBookById(String bookId) {
+	    	//↑ 도서 id와 일치하는 도서를 검색하는 메서드
+	    	//↑ getBookById()메서드는 매개변수 bookId가 전달받은 도서id와 저장소 객체에 저장된 도서 목록의 id를 비교하여 일치하는 도서 정보를 반환.
+	    	//↑ 이때 일치하는 도서가 없으면 IllegalArgumentException예외를 발생시킴.
 	        Book bookInfo = null;
 	       /* for(int i =0 ;i<listOfBooks.size(); i++) {
 	            Book book = listOfBooks.get(i); 
@@ -127,19 +158,29 @@ public class BookRepositoryImpl implements BookRepository{
 	        */
 	        
 	        String SQL = "SELECT count(*) FROM book where b_bookId=?";  
+	        //↑ 등록된 전체 도서 목록 중에서 검색 조건인 도서 ID와 일치하는 레코드 개수를 얻어옴
+	        //↑ 검색 조건인 도서 ID가 등록될 때만 데이터베이스에 접근하여 해당 도서를 조회할 수 있게 하기 위함.  
 	        int rowCount = template.queryForObject(SQL, Integer.class, bookId);  
+	        //↑ 레코드 개수가 한 개 이상일 때 검색 조건인 도서 ID와 일치하는 도서를 조회함
 	        if (rowCount != 0) {
 	            SQL = "SELECT * FROM book where b_bookId=?";  
+	            //↑ SQL 문을 SELECT*FROM book WHERE b_bookId=?로 간단하게 설정함. 
 	            bookInfo = template.queryForObject(SQL, new Object[] { bookId }, new BookRowMapper());  
+	            //↑ 도서 ID는 book테이블의 기본 키로 검색 조건인 도서 ID에 대한 도서는 한 개만 있으므로 queryForObect()메서드 사용
 	        }
 	        if(bookInfo == null)  
             	throw new BookIdException(bookId);
+	        //↑ 검색한 도서 아이디(bookid)가 없는 경우 예외 처리 클래서 BookIdException을 호출
 	        return bookInfo;
 	    }
+	    //↑ getBookById() 메서드는 데이터베이스의 book 테이블에 등록된 전체 도서 목록 중에서 검색 조건인 도서 ID와 일치하는 도서를 조회하여 해당 도서를 반환함. 
 	    
 	    public void setNewBook(Book book) {  
+	    	//↑ setNewBook()메서드는 새로 등록되는 도서 종보를 저장소 객체에 저장함. 
 	       // listOfBooks.add(book);  
-	    	
+	    	//↑ 신규 도서 정보를 listOfBooks에 추가로 저장
+	    	//↑ setNewBook() 메서드는 데이터베이스의 book 테이블에 신규 도서를 저장함. 
+ 	    	
 	    	 String SQL = "INSERT INTO book (b_bookId, b_name, b_unitPrice, b_author, b_description, b_publisher, b_category, b_unitsInStock, b_releaseDate,b_condition, b_fileName) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	         template.update(SQL, book.getBookId(), book.getName(), book.getUnitPrice(), book.getAuthor(),
@@ -162,5 +203,6 @@ public class BookRepositoryImpl implements BookRepository{
 	        String SQL = "DELETE from Book where b_bookId = ? ";
 	        this.template.update(SQL, bookID);
 	    } 
+	    //↑ setDeleteBook() 메서드는 요청 도서 id에 대한 해당 도서를 데이터베이스에서 삭제함. 
 	    
 }

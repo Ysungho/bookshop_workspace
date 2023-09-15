@@ -21,4 +21,5 @@ public class BookRowMapper implements RowMapper<Book>{
            book.setFileName(rs.getString(11));
            return book;
     }
+    //↑ 데이터베이스에 등록된 도서 목록의 Book 객체르 ㄹ모곩에 담기 위해 BookRowMapper 클래스를 생성함. 
 }  

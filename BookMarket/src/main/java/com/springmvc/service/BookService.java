@@ -1,3 +1,4 @@
+// 서비스 객체 생성
 package com.springmvc.service;
 
 import java.util.List;

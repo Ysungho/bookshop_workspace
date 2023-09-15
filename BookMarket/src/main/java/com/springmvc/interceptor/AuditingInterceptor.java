@@ -11,7 +11,8 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 public class AuditingInterceptor extends HandlerInterceptorAdapter {
 
-    public Logger logger = LoggerFactory.getLogger(this.getClass());  
+    public Logger logger = LoggerFactory.getLogger(this.getClass());
+    //↑ Logger 객체를 가져옴
 
     private String user;
     private String bookId;
@@ -31,10 +32,12 @@ public class AuditingInterceptor extends HandlerInterceptorAdapter {
                               Object handler, Exception arg3) throws Exception {
         if(request.getRequestURI().endsWith("books/add")){
             logger.warn(String.format("신규등록 도서 ID : %s, 접근자 : %s, 접근시각 : %s", bookId, user, getCurrentTime()));  
+            //↑ 로그 메시지를 출력
         }
     }
 
     private String getCurrentTime() {  
+    	//↑ 현재 날짜를 얻어오는 메서드 
         DateFormat formatter = new SimpleDateFormat("yyy/MM/dd HH:mm:ss");
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());

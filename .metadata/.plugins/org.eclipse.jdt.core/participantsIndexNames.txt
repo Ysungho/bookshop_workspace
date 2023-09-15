@@ -1,9 +1,5 @@
 INDEX VERSION 1.131
-C:\myJSP\bookshop_workspace\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1382758992.index
-\BookMarket\src\main\java
-C:\myJSP\bookshop_workspace\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\801044441.index
+C:\myJSP\bookshop_workspace\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3157810456.index
 \BookMarket\src\main\java
 C:\myJSP\bookshop_workspace\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3855855286.index
-\BookMarket\src\main\java
-C:\myJSP\bookshop_workspace\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3157810456.index
 \BookMarket\src\main\java

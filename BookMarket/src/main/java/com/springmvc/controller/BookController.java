@@ -35,10 +35,13 @@ import com.springmvc.validator.BookValidator;
 
 @Controller
 @RequestMapping("/books")
+//↑ 클래스 수준으 @RequestMapping 및 웹 요청 URL과 매핑할 기본 경로를 선언합니다. 
 public class BookController {
 
-    @Autowired
+    @Autowired// 클래스의 프로퍼티(멤버 변수)에 선언
     private BookService bookService;  
+    //↑ 웹 애플리케이션을 개발할 때 유연성과 확정성을 높이려면 BookController 컨트롤러에서 저장소 객체인 BookRepository로 접근하지 말고
+    // 서비스 객체인 BookService로 접근해야 합니다. 
 
     
    // @Autowired
@@ -49,31 +52,47 @@ public class BookController {
     private BookValidator bookValidator;  // BookValidator 인스턴스 선언
     
     @GetMapping
+    //↑ 사용자의 웹 요청 URL이 /books 인 경우 requestBookList() 메서드가 처리하도록 매핑합니다. 이는 @RequestMapping과 동일함. 
     public String requestBookList(Model model) { 
         List<Book> list = bookService.getAllBookList();
+        // ↑도서 목록을 가져옴
         model.addAttribute("bookList", list);  
+        // ↑ 모델 속성 이름 bookList에 저장된 도서 목록을 저장함
         return "books"; 
+        //↑ 뷰 이름: books를 반환하므로 JSP 파일은 books.jsp임.
     } 
+    //↑ 요청 처리 메서드: requestBookList()는 실제 웹 요청을 처리할 메서드입니다. 
     
- /*   @GetMapping("/all")  
+ /*   @GetMapping("/all") 
+  	  //↑ 사용자의 웹 요청 URL이 /books 인 경우 requestAllBooks()메서드가 처리하도록 메핑함. 
+   	  //↑ com.springmvc.controller 패키지의 컨트롤러인 BookController로 이동합니다. 
+   	  //↑ 메서드 수준의 @RequestMapping 및 웹 요청 URL과 매핑할 기본 경로를 선언함. 
     public String requestAllBooks(Model model) {  
         List<Book> list = bookService.getAllBookList(); 
         model.addAttribute("bookList", list); 
         return "books";
     } 
+    //↑ 메서드 수준의 @RequestMapping 경로에 대한 실제 요청을 처리하는 메서드
    */ 
     @GetMapping("/all")  
     public ModelAndView requestAllBooks() {
         ModelAndView modelAndView = new ModelAndView();  
+        //ModelAndView 클래스의 modelAndView 인스턴스 생성
         List<Book> list = bookService.getAllBookList();
         modelAndView.addObject("bookList", list);  
+        //↑ 도서 목록을 가져와 저장된 list 값을 모델 속성 bookList 에 저장
         modelAndView.setViewName("books");  
+        //↑ 뷰 이름을 books로 설정하여 books.jsp 파일을 출력
         return modelAndView; 
+        //↑ ModelAndView 클래스의 modelAndView 인스턴스 반환
     }
     
     @GetMapping("/{category}") 
-    public String requestBooksByCategory(@PathVariable("category") String bookCategory, Model model) {  
+    //↑ @GetMapping에 설정된 요청 매핑 경로는 url 템플릿 패턴으로 /{category}를 사용하고 여기에서 category는 경로 변수가 됨.
+    public String requestBooksByCategory(@PathVariable("category") String bookCategory, Model model) { 
+    	//↑ @PathVariable("catetory")를 선언하여 경로 변수 category에 대해 매개변수 이름을 bookCategory로 재정의.
         List<Book> booksByCategory =bookService.getBookListByCategory(bookCategory);  
+        //↑ bookService.getBookListByCategory()메서드를 호출하여 매개변수 bookCategory와 일치하는 도서 목록을 서비스 객체에서 가져와 booksByCategory에 저장. 
         
         if (booksByCategory == null || booksByCategory.isEmpty()) {
             throw new CategoryException();
@@ -81,6 +100,7 @@ public class BookController {
         
         model.addAttribute("bookList", booksByCategory);  
         return "books";   
+        //↑ 뷰 이름인 books로 반환하므로 jsp파일은 books.jsp가 됨.
     }
     
     @GetMapping("/filter/{bookFilter}")
@@ -94,6 +114,7 @@ public class BookController {
     
     @GetMapping("/book") 
     public String requestBookById(@RequestParam("id") String bookId, Model model) {  
+    	//↑ requestBookById()메서드에서 요청 파라미터 id를 bookId로 재정의
         Book bookById = bookService.getBookById(bookId);
         model.addAttribute("book", bookById );
         return "book";
@@ -107,26 +128,37 @@ public class BookController {
     
     @GetMapping("/add")  
     public String requestAddBookForm(@ModelAttribute("NewBook") Book book) {  
+    	//↑ 웹 요청 url이 /add 일 때 처리하는 요청 처리 메서드
+    	//↑ @ModelAttribute를 이용하여 커맨드 객체 이름을 NewBook으로 설정
         return "addBook";
+        //↑ 뷰 이름을 addBook으로 반환하여 addBook.jsp 파일을 출력
     }  
 	
     @PostMapping("/add") 
     public String submitAddNewBook(@Valid @ModelAttribute("NewBook")  Book book, BindingResult result) {
+    	//↑ submitAddnewBook() 메서드는 사용자의 입력값을 커맨드 객체 NewBook으로 매핑할 때 유효성 검사가 진행됨
+    	//↑ 그 결과값은 BindingResult 타입의 result 객체에 담김
+    	//↑ submitAddNewBook() 메서드는 폼에서 입력된 신규 도서를 데이터베이스에 등록함. 
     	 
     	if(result.hasErrors()) { 
+    		//↑ 유효성 검사로 발생된 오규가 BindingResult 타입의 result 객체에 있으면 뷰 이름 addBook을 반환하여 addBook.jsp에 출력함. 
              return "addBook";
          } 
         
     	 
     	MultipartFile bookImage = book.getBookImage();  
+    	//↑ 신규 도서 등록 페이지에서 커맨드 객체의 매개 변수 중 도서 이미지에 해당하는 매개변수를 MultipartFile 객체의 bookImage 변수로 전달함. 
 
         String saveName = bookImage.getOriginalFilename();  
+        //↑ MultipartFile 타입으로 전송받은 이미지 파일 이름을 얻음
         File saveFile = new File("C:\\upload", saveName); 
         
         if (bookImage != null && !bookImage.isEmpty()) {
             try {
                 bookImage.transferTo(saveFile);  
+                //↑도서 이미지 파일을 C:\\upload에 업로드 
             	book.setFileName(saveName);
+            	//↑ 신규 도서 정보를 저장하려고 서비스 객체의 setNewBook() 메서드를 호출함.
             } catch (Exception e) {
                 throw new RuntimeException("도서 이미지 업로드가 실패하였습니다", e);
             }
@@ -134,30 +166,43 @@ public class BookController {
     	
         bookService.setNewBook(book); 
         return "redirect:/books"; 
+        //↑ 웹 요청 url을 강제로  /books로 이동시켜 @RequestMapping("/books")에 매핑합니다
     } 
+    //↑ @ModelAttribute를 이용해서 커맨드 객체 이름을 NewBook으로 수정. 
     
     @ModelAttribute  
+    //↑ 메서드 수준의 @ModelAttribute를 선언
     public void addAttributes(Model model) { 
         model.addAttribute("addTitle", "신규 도서 등록");  
+        //↑ 모델 속성 이름 addTitle에 신규 도서 등록을 저장함. 
     }
     
     @InitBinder
+    //↑ @InitBinder를 설정해서 커맨드 객체의 모든 필드를 허용함. 
     public void initBinder(WebDataBinder binder) {
     	
     	//binder.setValidator(unitsInStockValidator);  // 생성한 unitsInStockValidator 설정 
     	 binder.setValidator(bookValidator);  
         binder.setAllowedFields("bookId","name","unitPrice","author", "description", 
         "publisher","category","unitsInStock","totalPages", "releaseDate", "condition", "bookImage"); 
+        //↑ 폼 페이지에서 바인딩 할 커맨드 객체의 필드 이름들을 설정함. 
     }
     
     @ExceptionHandler(value={BookIdException.class}) 
+    //↑ 예외 클래스 BookIdException을 설정
     public ModelAndView handleError(HttpServletRequest req, BookIdException exception) {
          ModelAndView mav = new ModelAndView();  
+         //↑ ModelAndView 클래스의 mav 인스턴스를 생성
          mav.addObject("invalidBookId", exception.getBookId());  
+         //↑ 모델 속성 invalidBookId에서 요청한 도서 아이디 값을 저장
          mav.addObject("exception", exception);  
+         //↑ 모델 속성 exception에서 예외 처리 클래스 BookIdException을 저장
          mav.addObject("url", req.getRequestURL()+"?"+req.getQueryString());  
+         //↑ 모델 속성 url에서 요청 url과 요청 쿼리문을 저장
          mav.setViewName("errorBook");  
+         //↑ 뷰 이름으로 errorBook을 설정하여 errorBook.jsp 파일을 출력
          return mav;  
+         //↑ ModelAndView 클래스의 mav 인스턴스를 반환
     }
     
     @GetMapping("/update")  
@@ -166,6 +211,9 @@ public class BookController {
         model.addAttribute("book", bookById);
         return "updateForm";
     }  
+    //↑ getUpdateBookForm() 메서드는 웹 브라우저에서 사용자 요청이 update로 끝나고, http 메서드가 get 방식이면 매핑되는 요청 처리 메서드임
+    //↑ 수정하려는 도서 정보를 updateBook 커맨드 객체로 뷰 페이지에 전달하고 뷰 이름인 updateForm을 반환함. 
+    //↑ 그러면 웹 브라우저의 뷰 페이지는 jsp 파일인 updateForm.jsp가 출력됨. 
 
     @PostMapping("/update") 
     public String submitUpdateBookForm(@ModelAttribute("updateBook") Book book) {
@@ -183,11 +231,18 @@ public class BookController {
         bookService.setUpdateBook(book);
         return "redirect:/books";
     }  
+    //↑ submitUpdateBookForm() 메서드는 웹 부라우저에서 사용자 요청 끝이 update로 되어있음
+    //↑ http 메서드가 post 방식이면 매핑되는 요청 처리 매서드임
+    //↑ 뷰 페이지인 udpateForm.jsp에서 <form:input> 태그에 입력된 수정 데이터값은 updateBook 커맨드로 전달됨
+    //↑ 웹 요청 처리 메서드 submitUpdateBookForm()에서 전달받은 updateBook 커맨드 객체의 데이터 값으로 도서 정보가 수정됨. 
+    
     
     @RequestMapping(value = "/delete") 
     public String getDeleteBookForm(Model model, @RequestParam("id") String bookId) {
         bookService.setDeleteBook(bookId);
         return "redirect:/books";
     }
+    //↑ getDeleteBookFrom() 메서드는 웹 부라우저에서 사용자 요청이 delete로 끝나고, http 메서드가 get 방식이면 매핑되는 요청 처리 메서드임
+    //↑ 이 메서드는 요청 도서 id에 대한 도서를 데이터 베이스에서 삭제함. 
     
 }

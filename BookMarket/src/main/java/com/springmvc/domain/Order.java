@@ -8,11 +8,14 @@ public class Order implements Serializable{
 	private Cart cart;                       //장바구니 객체
 	private Customer customer;            //고객 객체
 	private Shipping shipping;             //배송지 객체
+	//↑ 클래스의 orderId, cart, customer, shipping 필드 등을 선언. 
 	
 	public Order() {
 		  this.customer = new Customer();
 	      this.shipping = new Shipping();
 	}
+	//↑ 기본 생성자 Order() 추가
+	
 	public Long getOrderId() {
 		return orderId;
 	}
@@ -37,6 +40,8 @@ public class Order implements Serializable{
 	public void setShipping(Shipping shipping) {
 		this.shipping = shipping;
 	}
+	//↑ 각 필드에 대한 Setter(), Getter() 메서드 추가
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -60,7 +65,7 @@ public class Order implements Serializable{
 			return false;
 		return true;
 	}
-	
+	//↑ hashCode(), equals() 메서드 추가. 
 	
 	
 
